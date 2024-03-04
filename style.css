@@ -1,0 +1,64 @@
+*{
+    font-family: "Jetbrains Mono";
+}
+.header{
+    color: white;
+    background-color: #323539;
+    padding: 10px;
+    text-align: center;
+}
+
+.table {
+    font-size: 14px;
+    width: 90%;
+    margin: 20px auto;
+}
+
+th, td {
+    padding: 8px;
+}
+
+.header {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.btn {
+    padding: 5px 10px; 
+    font-size: 14px;
+}
+.inputDiv {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: row;
+    
+}
+.inputDiv input {
+    width: 100px;
+    margin: 10px;
+}
+.modifyContent {
+    display: flex;
+    justify-content:space-between;
+    align-items: center;
+    text-align: center;
+}
+#searchBar{
+    margin-left: 10px;
+}
+.toast{
+    margin-left: 10px;
+    position: absolute;
+    top: 50px;
+    left: 10px;
+}
+.toast-header{
+    display: flex;
+    justify-content: space-between;
+}
+h3{
+    font-size: 20px;
+    color: #323539;
+    margin-top: 5px;
+    margin-left: 10px;
+}
