@@ -1,5 +1,6 @@
 $(document).ready(function () {
   console.log("Page loaded");
+  
   function toast(message) {
     const toast = $(".toast");
     $(".toast-body").text(message);
