@@ -84,13 +84,10 @@ $(document).ready(function () {
             success: function () {
               console.log("Data Added Successfully");
               loadTable();
-              $("#addMaSach").val("");
-              $("#addTenSach").val("");
-              $("#addTacGia").val("");
               $("#addTheLoai").val("");
-              $("#addNXB").val("");
-
+              $("#addMoTa").val("");
               addModal.modal("hide");
+              
               toast("Thêm thể loại mới thành công");
             },
             error: function (err) {
