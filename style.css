@@ -87,10 +87,17 @@ td {
   justify-content: space-between !important;
 }
 
+.toast {
+  position: absolute;
+  top: 110px;
+  right: 10px;
+  z-index: 1051!important;
+}
+
 .table {
   font-size: 14px !important;
   width: 90% !important;
-  margin: 20px auto !important; 
+  margin: 100px auto!important; 
 }
 
 .thead-light th {

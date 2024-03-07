@@ -1,5 +1,17 @@
 $(document).ready(function () {
   console.log("Page loaded");
+  function toast(message) {
+    const toast = $(".toast");
+    $(".toast-body").text(message);
+    setTimeout(function () {
+      toast.toast("show");
+
+      setTimeout(function () {
+        toast.toast("hide");
+      }, 2000);
+    }, 100);
+  }
+
   function loadTable() {
     // lay du lieu tu server
     $.ajax({
@@ -21,7 +33,7 @@ $(document).ready(function () {
     bookTable.empty();
 
     $.each(data, function (_, book) {
-      let attributes = book.attributes; 
+      let attributes = book.attributes;
       let row = $("<tr></tr>");
 
       //them cac du lieu vao hang
@@ -52,16 +64,18 @@ $(document).ready(function () {
     let id = $(this).data("id");
     console.log(id);
     console.log("delete: ", id);
-    
+
     $.ajax({
       url: "http://localhost:1337/api/thong-tin-saches/" + id,
       method: "DELETE",
       success: function () {
         console.log("Data Deleted Successfully");
         loadTable();
+        toast("Xoá sách thành công");
       },
       error: function (err) {
         console.log("Error deleting data: ", err);
+        toast("Xoá sách thất bại");
       },
     });
   });
@@ -71,51 +85,61 @@ $(document).ready(function () {
     let addModal = $("#addModal");
     addModal.modal("show");
     // gui du lieu len server
-    $("#saveAdd").off("click").click(function () {
-      // lay du lieu tu input
-      let maSach = $("#addMaSach").val();
-      let tenSach = $("#addTenSach").val();
-      let tenTacGia = $("#addTacGia").val();
-      let theLoai = $("#addTheLoai").val();
-      let namXuatBan = $("#addNXB").val();
-      $.ajax({
-        url: "http://localhost:1337/api/thong-tin-saches/?populate=*",
-        method: "POST",
-        contentType: "application/json",
-        data: JSON.stringify({
-          data: {
-            maSach: maSach,
-            tenSach: tenSach,
-            tenTacGia: tenTacGia,
-            theLoai: theLoai,
-            namXuatBan: namXuatBan,
-          },
-        }),
-        success: function () {
-          console.log("Data Added Successfully");
-          loadTable();
-          $("#addMaSach").val("");
-          $("#addTenSach").val("");
-          $("#addTacGia").val("");
-          $("#addTheLoai").val("");
-          $("#addNXB").val("");
+    $("#saveAdd")
+      .off("click")
+      .click(function () {
+        // lay du lieu tu input
+        let maSach = $("#addMaSach").val();
+        let tenSach = $("#addTenSach").val();
+        let tenTacGia = $("#addTacGia").val();
+        let theLoai = $("#addTheLoai").val();
+        let namXuatBan = $("#addNXB").val();
+        if (
+          maSach === "" ||
+          tenSach === "" ||
+          tenTacGia === "" ||
+          theLoai === "" ||
+          namXuatBan === ""
+        ) {
+          toast("Vui lòng nhập đầy đủ thông tin");
+          return;
+        } else if (!Number(namXuatBan)) {
+          toast("Năm xuất bản phải là số");
+          return;
+        } else {
+          $.ajax({
+            url: "http://localhost:1337/api/thong-tin-saches/?populate=*",
+            method: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({
+              data: {
+                maSach: maSach,
+                tenSach: tenSach,
+                tenTacGia: tenTacGia,
+                theLoai: theLoai,
+                namXuatBan: namXuatBan,
+              },
+            }),
+            success: function () {
+              console.log("Data Added Successfully");
+              loadTable();
+              $("#addMaSach").val("");
+              $("#addTenSach").val("");
+              $("#addTacGia").val("");
+              $("#addTheLoai").val("");
+              $("#addNXB").val("");
 
-          addModal.modal("hide");
-        },
-        error: function (err) {
-          console.log("Error adding data: ", err);
-          const toast = $(".toast");
-          $(".toast-body").text("Sai kiểu dữ liệu hoặc thiếu dữ liệu");
-          setTimeout(function () {
-            toast.toast("show");
-
-            setTimeout(function () {
-              toast.toast("hide");
-            }, 2000);
-          }, 100);
-        },
+              addModal.modal("hide");
+              toast("Thêm sách mới thành công");
+            },
+            error: function (err) {
+              console.log("Error adding data: ", err);
+              const toast = $(".toast");
+              toast("Sai kiểu dữ liệu hoặc thiếu dữ liệu");
+            },
+          });
+        }
       });
-    });
   });
   // cap nhat du lieu
   $("#bookTable").on("click", ".modify", function () {
@@ -125,7 +149,6 @@ $(document).ready(function () {
     console.log("modify: ", id);
     let modifyModal = $("#modifyModal");
     modifyModal.modal("show");
-
 
     // lay du lieu tu hang de chuyen vao modal
     let rowData = $(this)
@@ -153,46 +176,53 @@ $(document).ready(function () {
         let theLoai = $("#modifyTheLoai").val();
         let namXuatBan = $("#modifyNXB").val();
 
-        // gui du lieu len server
-        $.ajax({
-          url: "http://localhost:1337/api/thong-tin-saches/" + id,
-          method: "PUT",
-          contentType: "application/json",
-          data: JSON.stringify({
-            data: {
-              maSach: maSach,
-              tenSach: tenSach,
-              tenTacGia: tenTacGia,
-              theLoai: theLoai,
-              namXuatBan: namXuatBan,
+        if (
+          maSach === "" ||
+          tenSach === "" ||
+          tenTacGia === "" ||
+          theLoai === "" ||
+          namXuatBan === ""
+        ) {
+          toast("Vui lòng nhập đầy đủ thông tin");
+          return;
+        } else if (!Number(namXuatBan)) {
+          toast("Năm xuất bản phải là số");
+          return;
+        } else {
+          // gui du lieu len server
+          $.ajax({
+            url: "http://localhost:1337/api/thong-tin-saches/" + id,
+            method: "PUT",
+            contentType: "application/json",
+            data: JSON.stringify({
+              data: {
+                maSach: maSach,
+                tenSach: tenSach,
+                tenTacGia: tenTacGia,
+                theLoai: theLoai,
+                namXuatBan: namXuatBan,
+              },
+            }),
+            success: function (data) {
+              console.log(data);
+              console.log("Data Modified Successfully");
+              loadTable();
+              toast("Chỉnh sửa dữ liệu thành công");
+
+              //reset du lieu modal
+              $("#modifyMaSach").val("");
+              $("#modifyTenSach").val("");
+              $("#modifyTacGia").val("");
+              $("#modifyTheLoai").val("");
+              $("#modifyNXB").val("");
+              modifyModal.modal("hide");
             },
-          }),
-          success: function (data) {
-            console.log(data);
-            console.log("Data Modified Successfully");
-            loadTable();
-
-            //reset du lieu modal
-            $("#modifyMaSach").val("");
-            $("#modifyTenSach").val("");
-            $("#modifyTacGia").val("");
-            $("#modifyTheLoai").val("");
-            $("#modifyNXB").val("");
-            modifyModal.modal("hide");
-          },
-          error: function (err) {
-            console.log("Error modifying data: ", err);
-            const toast = $(".toast");
-            $(".toast-body").text("Sai kiểu dữ liệu hoặc thiếu dữ liệu");
-            setTimeout(function () {
-              toast.toast("show");
-
-              setTimeout(function () {
-                toast.toast("hide");
-              }, 2000);
-            }, 100);
-          },
-        });
+            error: function (err) {
+              console.log("Error modifying data: ", err);
+              toast("Sai kiểu dữ liệu hoặc thiếu dữ liệu");
+            },
+          });
+        }
       });
   });
 
@@ -211,6 +241,7 @@ $(document).ready(function () {
       },
       error: function (err) {
         console.log("Error loading data: ", err);
+        toast("Tìm kiếm thất bại");
       },
     });
   });
