@@ -42,25 +42,6 @@ $(document).ready(function () {
       );
       bookTable.append(row); // them hang vao bang
     });
-    // them phan cap nhat du lieu o duoi bang
-    bookTable.append(`
-    <h3>Thêm dữ liệu</h3> 
-    <div class="inputDiv">
-      <input type="text" id="inputMaSach" placeholder="Mã sách" class="form-control-sm">
-      <input type="text" id="inputTenSach" placeholder="Tên sách" class="form-control-sm">
-      <input type="text" id="inputTacGia" placeholder="Tác giả" class="form-control-sm">
-      <input type="text" id="inputTheLoai" placeholder="Thể loại" class="form-control-sm">
-      <input type="text" id="inputNamXuatBan" placeholder="Năm xuất bản" class="form-control-sm">
-      <button id="add" class="btn btn-dark m-1">Thêm dữ liệu</button>
-    </div>
-    `);
-    bookTable.append(`
-    <h3>Sửa dữ liệu</h3> 
-    <div class="searchDiv">
-    <input type="text" class="form-control-sm" id="searchBar" placeholder="Tìm kiếm theo thể loại"></input>
-    <button id="searchBtn" class="btn btn-dark m-1">Tìm kiếm</button>
-    </div>
-    `);
   }
 
   // lay du lieu tu server
@@ -86,55 +67,65 @@ $(document).ready(function () {
   });
 
   // them du lieu
-  $("#bookTable").on("click", "#add", function () {
-    // lay du lieu tu input
-    let maSach = $("#inputMaSach").val();
-    let tenSach = $("#inputTenSach").val();
-    let tenTacGia = $("#inputTacGia").val();
-    let theLoai = $("#inputTheLoai").val();
-    let namXuatBan = $("#inputNamXuatBan").val();
-
+  $("#addBtn").click(function () {
+    let addModal = $("#addModal");
+    addModal.modal("show");
     // gui du lieu len server
-    $.ajax({
-      url: "http://localhost:1337/api/thong-tin-saches/?populate=*",
-      method: "POST",
-      contentType: "application/json",
-      data: JSON.stringify({
-        data: {
-          maSach: maSach,
-          tenSach: tenSach,
-          tenTacGia: tenTacGia,
-          theLoai: theLoai,
-          namXuatBan: namXuatBan,
-        },
-      }),
-      success: function () {
-        console.log("Data Added Successfully");
-        loadTable();
-      },
-      error: function (err) {
-        console.log("Error adding data: ", err);
-        const toast = $(".toast");
-        $(".toast-body").text("Sai kiểu dữ liệu hoặc thiếu dữ liệu");
-        setTimeout(function () {
-          toast.toast("show");
+    $("#saveAdd").off("click").click(function () {
+      // lay du lieu tu input
+      let maSach = $("#addMaSach").val();
+      let tenSach = $("#addTenSach").val();
+      let tenTacGia = $("#addTacGia").val();
+      let theLoai = $("#addTheLoai").val();
+      let namXuatBan = $("#addNXB").val();
+      $.ajax({
+        url: "http://localhost:1337/api/thong-tin-saches/?populate=*",
+        method: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({
+          data: {
+            maSach: maSach,
+            tenSach: tenSach,
+            tenTacGia: tenTacGia,
+            theLoai: theLoai,
+            namXuatBan: namXuatBan,
+          },
+        }),
+        success: function () {
+          console.log("Data Added Successfully");
+          loadTable();
+          $("#addMaSach").val("");
+          $("#addTenSach").val("");
+          $("#addTacGia").val("");
+          $("#addTheLoai").val("");
+          $("#addNXB").val("");
 
+          addModal.modal("hide");
+        },
+        error: function (err) {
+          console.log("Error adding data: ", err);
+          const toast = $(".toast");
+          $(".toast-body").text("Sai kiểu dữ liệu hoặc thiếu dữ liệu");
           setTimeout(function () {
-            toast.toast("hide");
-          }, 2000);
-        }, 100);
-      },
+            toast.toast("show");
+
+            setTimeout(function () {
+              toast.toast("hide");
+            }, 2000);
+          }, 100);
+        },
+      });
     });
   });
-
   // cap nhat du lieu
   $("#bookTable").on("click", ".modify", function () {
     console.log("this1", $(this));
     let id = $(this).data("id");
     console.log("id :", id);
     console.log("modify: ", id);
-    const modifyModal = $("#modifyModal");
+    let modifyModal = $("#modifyModal");
     modifyModal.modal("show");
+
 
     // lay du lieu tu hang de chuyen vao modal
     let rowData = $(this)
@@ -161,8 +152,6 @@ $(document).ready(function () {
         let tenTacGia = $("#modifyTacGia").val();
         let theLoai = $("#modifyTheLoai").val();
         let namXuatBan = $("#modifyNXB").val();
-
-        console.log(maSach, tenSach, tenTacGia, theLoai, namXuatBan);
 
         // gui du lieu len server
         $.ajax({
@@ -208,7 +197,7 @@ $(document).ready(function () {
   });
 
   //tim kiem theo the loai
-  $("#bookTable").on("click", "#searchBtn", function () {
+  $("#searchBtn").click(function () {
     let searchValue = $("#searchBar").val();
     $.ajax({
       url:
