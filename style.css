@@ -18,18 +18,51 @@ a {
   text-decoration: none !important;
 }
 
+.linkAndIcon {
+  position: relative;
+}
+
+.linkAndIcon::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 4px;
+    border-radius: 4px;
+    background-color: white;
+    bottom: 0;
+    left: 0;
+    transform-origin: right;
+    transform: scaleX(0);
+    transition: transform .3s ease-in-out;
+  }
+
+.linkAndIcon:hover::before {
+  transform-origin: left;
+  transform: scaleX(1);
+}
+
 .navBar1 {
   color: white;
   background-color: var(--accentColor);
   padding: 10px;
   text-align: left;
+  display: flex;
+  justify-content: space-between;
 }
 
-.navBar1 h1 {
+.navBar1 #logo h1 {
   margin-left: 60px;
   font-weight: 700;
 }
-
+.links {
+  margin-right: 60px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.linkAndIcon {
+  align-items: center;
+}
 .navBar2 {
   display: flex;
   flex-direction: row;
@@ -81,6 +114,17 @@ td {
   font-size: 24px;
   margin-bottom: 10px ;
 }
+#logo h1{
+  box-shadow: inset 0 0 0 0 #39c2bb !important;
+  color: white !important;
+  margin: 0 -0.25rem;
+  padding: 0 .25rem;
+  transition: color .3s ease-in-out, box-shadow .3s ease-in-out;
+}
+#logo h1:hover {
+  box-shadow: inset 200px 0 0 0 white !important;
+  color: #39c2bb !important;
+}
 
 .toast-header {
   display: flex !important;
@@ -96,7 +140,7 @@ td {
 
 .table {
   font-size: 14px !important;
-  width: 90% !important;
+  width: 80% !important;
   margin: 100px auto!important; 
 }
 
