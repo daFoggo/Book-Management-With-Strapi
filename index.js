@@ -1,6 +1,6 @@
 $(document).ready(function () {
   console.log("Page loaded");
-  
+
   function toast(message) {
     const toast = $(".toast");
     $(".toast-body").text(message);
@@ -142,6 +142,7 @@ $(document).ready(function () {
         }
       });
   });
+  
   // cap nhat du lieu
   $("#bookTable").on("click", ".modify", function () {
     console.log("this1", $(this));
@@ -164,7 +165,7 @@ $(document).ready(function () {
     $("#modifyMaSach").val(rowData[0]);
     $("#modifyTenSach").val(rowData[1]);
     $("#modifyTacGia").val(rowData[2]);
-    $("#modifyTheLoai").val(rowData[3]);
+    $(".categorySelect").val(rowData[3]);
     $("#modifyNXB").val(rowData[4]);
 
     $("#saveModify")
@@ -174,7 +175,7 @@ $(document).ready(function () {
         let maSach = $("#modifyMaSach").val();
         let tenSach = $("#modifyTenSach").val();
         let tenTacGia = $("#modifyTacGia").val();
-        let theLoai = $("#modifyTheLoai").val();
+        let theLoai = $(".categorySelect").text();
         let namXuatBan = $("#modifyNXB").val();
 
         if (
@@ -209,13 +210,7 @@ $(document).ready(function () {
               console.log("Data Modified Successfully");
               loadTable();
               toast("Chỉnh sửa dữ liệu thành công");
-
-              //reset du lieu modal
-              $("#modifyMaSach").val("");
-              $("#modifyTenSach").val("");
-              $("#modifyTacGia").val("");
-              $("#modifyTheLoai").val("");
-              $("#modifyNXB").val("");
+              
               modifyModal.modal("hide");
             },
             error: function (err) {
@@ -246,4 +241,24 @@ $(document).ready(function () {
       },
     });
   });
+  
+  // lay du lieu cho select menu
+  function selectCategory(){
+    $.ajax({
+      url: "http://localhost:1337/api/the-loais/?populate=*",
+      method: "GET",
+      success: function(response){
+        let selectMenu = $(".categorySelect");
+        selectMenu.empty();
+        selectMenu.append('<option selected class="optionTheLoai">Chọn thể loại</option>')
+        response.data.forEach(function(category) {
+          selectMenu.append('<option class="optionTheLoai">' + category.attributes.TenTheLoai + '</option>');
+        });
+      },
+      error: function(err){
+        console.log(err);
+      }
+    });
+  }
+  selectCategory();
 });
