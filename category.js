@@ -1,6 +1,7 @@
 $(document).ready(function () {
   console.log("Page loaded");
 
+  //thong bao
   function toast(message) {
     const toast = $(".toast");
     $(".toast-body").text(message);
@@ -13,22 +14,7 @@ $(document).ready(function () {
     }, 100);
   }
 
-  function loadTable() {
-    // lay du lieu tu server
-    $.ajax({
-      url: "http://localhost:1337/api/the-loais/?populate=*",
-      method: "GET",
-      success: function (data) {
-        console.log("Data Loaded Successfully");
-        toTable(data["data"]); // sau khi tai du lieu thanh cong thi chuyen sang bang
-      },
-      error: function (err) {
-        console.log("Error loading data: ", err);
-      },
-    });
-  }
-
-  // chuyen sang bang
+  // chuyen du lieu sang bang
   function toTable(data) {
     let categoryTable = $("#categoryTable");
     categoryTable.empty();
@@ -40,7 +26,6 @@ $(document).ready(function () {
       categoryRow.append($("<td></td>").text(category.id));
       categoryRow.append($("<td></td>").text(attributes.TenTheLoai));
       categoryRow.append($("<td></td>").text(attributes.moTa));
-      console.log(attributes.TenTheLoai);
       categoryTable.append(categoryRow);
       categoryRow.append(
         '<td><button class="modify btn btn-light btn-sm m-1" data-id="' +
@@ -53,7 +38,20 @@ $(document).ready(function () {
     categoryTable.append(bookRow);
   }
 
-  // lay du lieu tu server
+  // hien thi du lieu
+  function loadTable() {
+    $.ajax({
+      url: "http://localhost:1337/api/the-loais/?populate=*",
+      method: "GET",
+      success: function (data) {
+        console.log("Data Loaded Successfully");
+        toTable(data["data"]);
+      },
+      error: function (err) {
+        console.log("Error loading data: ", err);
+      },
+    });
+  }
   loadTable();
 
   // them du lieu
@@ -87,7 +85,7 @@ $(document).ready(function () {
               $("#addTheLoai").val("");
               $("#addMoTa").val("");
               addModal.modal("hide");
-              
+
               toast("Thêm thể loại mới thành công");
             },
             error: function (err) {
@@ -100,33 +98,9 @@ $(document).ready(function () {
       });
   });
 
-  // xoa du lieu
-  $("#categoryTable").on("click", ".delete", function () {
-    let id = $(this).data("id");
-    console.log(id);
-    console.log("delete: ", id);
-
-    $.ajax({
-      url: "http://localhost:1337/api/the-loais/" + id,
-      method: "DELETE",
-      success: function () {
-        console.log("Data Deleted Successfully");
-        loadTable();
-        toast("Xoá thể loại thành công");
-      },
-      error: function (err) {
-        console.log("Error deleting data: ", err);
-        toast("Xoá thể loại thất bại");
-      },
-    });
-  });
-
   // cap nhat du lieu
   $("#categoryTable").on("click", ".modify", function () {
-    console.log("this1", $(this));
     let id = $(this).data("id");
-    console.log("id :", id);
-    console.log("modify: ", id);
     let modifyModal = $("#modifyModal");
     modifyModal.modal("show");
 
@@ -135,14 +109,12 @@ $(document).ready(function () {
       .closest("tr")
       .find("td")
       .map(function () {
-        console.log($(this).text());
         return $(this).text();
       })
       .get();
 
     $("#modifyTheLoai").val(rowData[1]);
     $("#modifyMoTa").val(rowData[2]);
-
 
     $("#saveModify")
       .off("click")
@@ -151,9 +123,7 @@ $(document).ready(function () {
         let theLoai = $("#modifyTheLoai").val();
         let moTa = $("#modifyMoTa").val();
 
-        if (
-          theLoai === ""
-        ) {
+        if (theLoai === "") {
           toast("Vui lòng nhập đầy đủ thông tin");
           return;
         } else {
@@ -169,7 +139,6 @@ $(document).ready(function () {
               },
             }),
             success: function (data) {
-              console.log(data);
               console.log("Data Modified Successfully");
               loadTable();
               toast("Chỉnh sửa dữ liệu thành công");
@@ -186,5 +155,24 @@ $(document).ready(function () {
           });
         }
       });
+  });
+
+  // xoa du lieu
+  $("#categoryTable").on("click", ".delete", function () {
+    let id = $(this).data("id");
+
+    $.ajax({
+      url: "http://localhost:1337/api/the-loais/" + id,
+      method: "DELETE",
+      success: function () {
+        console.log("Data Deleted Successfully");
+        loadTable();
+        toast("Xoá thể loại thành công");
+      },
+      error: function (err) {
+        console.log("Error deleting data: ", err);
+        toast("Xoá thể loại thất bại");
+      },
+    });
   });
 });

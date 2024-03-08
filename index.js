@@ -92,27 +92,6 @@ $(document).ready(function () {
   }
   loadTable();
 
-  // xoa du lieu
-  $("#bookTable").on("click", ".delete", function () {
-    let id = $(this).data("id");
-    console.log(id);
-    console.log("delete: ", id);
-
-    $.ajax({
-      url: "http://localhost:1337/api/thong-tin-saches/" + id,
-      method: "DELETE",
-      success: function () {
-        console.log("Data Deleted Successfully");
-        loadTable();
-        toast("Xoá sách thành công");
-      },
-      error: function (err) {
-        console.log("Error deleting data: ", err);
-        toast("Xoá sách thất bại");
-      },
-    });
-  });
-
   // them du lieu
   $("#addBtn").click(function () {
     let addModal = $("#addModal");
@@ -190,7 +169,6 @@ $(document).ready(function () {
       .closest("tr")
       .find("td")
       .map(function () {
-        console.log($(this).text());
         return $(this).text();
       })
       .get();
@@ -209,7 +187,6 @@ $(document).ready(function () {
         let tenSach = $("#modifyTenSach").val();
         let tenTacGia = $("#modifyTacGia").val();
         let theLoai = $(".categorySelect").find(":selected").val();
-        console.log("the loai", theLoai);
         let namXuatBan = $("#modifyNXB").val();
 
         if (
@@ -258,6 +235,25 @@ $(document).ready(function () {
           });
         }
       });
+  });
+
+  // xoa du lieu
+  $("#bookTable").on("click", ".delete", function () {
+    let id = $(this).data("id");
+
+    $.ajax({
+      url: "http://localhost:1337/api/thong-tin-saches/" + id,
+      method: "DELETE",
+      success: function () {
+        console.log("Data Deleted Successfully");
+        loadTable();
+        toast("Xoá sách thành công");
+      },
+      error: function (err) {
+        console.log("Error deleting data: ", err);
+        toast("Xoá sách thất bại");
+      },
+    });
   });
 
   //tim kiem theo the loai
