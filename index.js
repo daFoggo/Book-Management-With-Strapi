@@ -85,6 +85,7 @@ $(document).ready(function () {
   $("#addBtn").click(function () {
     let addModal = $("#addModal");
     addModal.modal("show");
+  
     // gui du lieu len server
     $("#saveAdd")
       .off("click")
@@ -93,8 +94,9 @@ $(document).ready(function () {
         let maSach = $("#addMaSach").val();
         let tenSach = $("#addTenSach").val();
         let tenTacGia = $("#addTacGia").val();
-        let theLoai = $("#addTheLoai").val();
+        let theLoai = $(".categorySelect").find(":selected")[1].attributes.value.value;
         let namXuatBan = $("#addNXB").val();
+  
         if (
           maSach === "" ||
           tenSach === "" ||
@@ -117,7 +119,9 @@ $(document).ready(function () {
                 maSach: maSach,
                 tenSach: tenSach,
                 tenTacGia: tenTacGia,
-                theLoai: theLoai,
+                the_loai: {
+                  id: theLoai
+                },
                 namXuatBan: namXuatBan,
               },
             }),
@@ -127,9 +131,8 @@ $(document).ready(function () {
               $("#addMaSach").val("");
               $("#addTenSach").val("");
               $("#addTacGia").val("");
-              $("#addTheLoai").val("");
               $("#addNXB").val("");
-
+  
               addModal.modal("hide");
               toast("Thêm sách mới thành công");
             },
@@ -142,6 +145,7 @@ $(document).ready(function () {
         }
       });
   });
+  
   
   // cap nhat du lieu
   $("#bookTable").on("click", ".modify", function () {
@@ -175,7 +179,7 @@ $(document).ready(function () {
         let maSach = $("#modifyMaSach").val();
         let tenSach = $("#modifyTenSach").val();
         let tenTacGia = $("#modifyTacGia").val();
-        let theLoai = $(".categorySelect").text();
+        let theLoai = $(".categorySelect").find(":selected")[1].attributes.value.value;
         let namXuatBan = $("#modifyNXB").val();
 
         if (
@@ -193,7 +197,7 @@ $(document).ready(function () {
         } else {
           // gui du lieu len server
           $.ajax({
-            url: "http://localhost:1337/api/thong-tin-saches/" + id,
+            url: "http://localhost:1337/api/thong-tin-saches/" + id + "?populate=*",
             method: "PUT",
             contentType: "application/json",
             data: JSON.stringify({
@@ -201,7 +205,9 @@ $(document).ready(function () {
                 maSach: maSach,
                 tenSach: tenSach,
                 tenTacGia: tenTacGia,
-                theLoai: theLoai,
+                the_loai: {
+                  id: theLoai
+                },
                 namXuatBan: namXuatBan,
               },
             }),
@@ -243,22 +249,30 @@ $(document).ready(function () {
   });
   
   // lay du lieu cho select menu
-  function selectCategory(){
+  function selectCategory() {
     $.ajax({
-      url: "http://localhost:1337/api/the-loais/?populate=*",
-      method: "GET",
-      success: function(response){
-        let selectMenu = $(".categorySelect");
-        selectMenu.empty();
-        selectMenu.append('<option selected class="optionTheLoai">Chọn thể loại</option>')
-        response.data.forEach(function(category) {
-          selectMenu.append('<option class="optionTheLoai">' + category.attributes.TenTheLoai + '</option>');
-        });
-      },
-      error: function(err){
-        console.log(err);
-      }
+        url: "http://localhost:1337/api/the-loais/?populate=*",
+        method: "GET",
+        success: function (response) {
+            let selectMenu = $(".categorySelect");
+            selectMenu.empty();
+            selectMenu.append('<option>Chọn thể loại</option>');
+            response.data.forEach(function (category) {
+                selectMenu.append('<option class="optionTheLoai" value="' + category.id + '">' + category.attributes.TenTheLoai + '</option>');
+            });
+
+            selectMenu.change(function () {
+                let selectedOption = $(this).find(":selected");
+                $(this).find("option").removeAttr("selected");
+                selectedOption.attr("selected", "selected");
+            });
+        },
+        error: function (err) {
+            console.log(err);
+        }
     });
   }
+
+
   selectCategory();
 });
