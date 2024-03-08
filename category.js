@@ -6,6 +6,7 @@ $(document).ready(function () {
     const toast = $(".toast");
     $(".toast-body").text(message);
     setTimeout(function () {
+      // hien thi thong bao sau 100ms va an sau 2000ms
       toast.toast("show");
 
       setTimeout(function () {
@@ -58,11 +59,9 @@ $(document).ready(function () {
   $("#addBtn").click(function () {
     let addModal = $("#addModal");
     addModal.modal("show");
-    // gui du lieu len server
     $("#saveAdd")
       .off("click")
       .click(function () {
-        // lay du lieu tu input
         let theLoai = $("#addTheLoai").val();
         let moTa = $("#addMoTa").val();
         if (theLoai === "") {
@@ -104,7 +103,6 @@ $(document).ready(function () {
     let modifyModal = $("#modifyModal");
     modifyModal.modal("show");
 
-    // lay du lieu tu hang de chuyen vao modal
     let rowData = $(this)
       .closest("tr")
       .find("td")
@@ -119,7 +117,6 @@ $(document).ready(function () {
     $("#saveModify")
       .off("click")
       .click(function () {
-        // lay du lieu tu input
         let theLoai = $("#modifyTheLoai").val();
         let moTa = $("#modifyMoTa").val();
 
@@ -127,7 +124,6 @@ $(document).ready(function () {
           toast("Vui lòng nhập đầy đủ thông tin");
           return;
         } else {
-          // gui du lieu len server
           $.ajax({
             url: "http://localhost:1337/api/the-loais/" + id,
             method: "PUT",
@@ -143,7 +139,6 @@ $(document).ready(function () {
               loadTable();
               toast("Chỉnh sửa dữ liệu thành công");
 
-              //reset du lieu modal
               $("#modifyTheLoai").val("");
               $("#modifyMoTa").val("");
               modifyModal.modal("hide");

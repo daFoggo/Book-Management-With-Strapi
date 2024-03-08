@@ -5,7 +5,7 @@ $(document).ready(function () {
   function toast(message) {
     const toast = $(".toast");
     $(".toast-body").text(message);
-    setTimeout(function () {
+    setTimeout(function () { // hien thi thong bao sau 100ms va an sau 2000ms
       toast.toast("show");
 
       setTimeout(function () {
@@ -23,7 +23,7 @@ $(document).ready(function () {
         let selectMenu = $(".categorySelect");
         selectMenu.empty();
         selectMenu.append("<option>Chọn thể loại</option>");
-        response.data.forEach(function (category) {
+        response.data.forEach(function (category) { // Voi mang data tra ve, moi phan tu duoc lay ra va them vao select menu
           selectMenu.append(
             '<option class="optionTheLoai" value="' +
               category.id +
@@ -33,7 +33,7 @@ $(document).ready(function () {
           );
         });
 
-        selectMenu.change(function () {
+        selectMenu.change(function () { // Dat attribute select cho option duoc chon
           let selectedOption = $(this).find(":selected");
           $(this).find("option").removeAttr("selected");
           selectedOption.attr("selected", "selected");
@@ -46,7 +46,7 @@ $(document).ready(function () {
   }
   selectCategory();
 
-  // chuyen sang bang
+  // chuyen tu du lieu sang bang
   function toTable(data) {
     let bookTable = $("#bookTable");
     bookTable.empty();
@@ -55,7 +55,6 @@ $(document).ready(function () {
       let attributes = book.attributes;
       let row = $("<tr></tr>");
 
-      //them cac du lieu vao hang
       row.append($("<td></td>").text(attributes.maSach));
       row.append($("<td></td>").text(attributes.tenSach));
       row.append($("<td></td>").text(attributes.tenTacGia));
@@ -63,7 +62,7 @@ $(document).ready(function () {
         $("<td></td>").text(attributes.the_loai.data?.attributes.TenTheLoai)
       );
       row.append($("<td></td>").text(attributes.namXuatBan));
-      // them nut modify va delete
+
       row.append(
         '<td><button class="modify btn btn-light btn-sm m-1" data-id="' +
           book.id +
@@ -71,19 +70,18 @@ $(document).ready(function () {
           book.id +
           '">Xoá</button></td>'
       );
-      bookTable.append(row); // them hang vao bang
+      bookTable.append(row);
     });
   }
 
   // hien thi du lieu
   function loadTable() {
-    // lay du lieu tu server
     $.ajax({
       url: "http://localhost:1337/api/thong-tin-saches/?populate=*",
       method: "GET",
       success: function (data) {
         console.log("Data Loaded Successfully");
-        toTable(data["data"]); // sau khi tai du lieu thanh cong thi chuyen sang bang
+        toTable(data["data"]);
       },
       error: function (err) {
         console.log("Error loading data: ", err);
@@ -97,11 +95,9 @@ $(document).ready(function () {
     let addModal = $("#addModal");
     addModal.modal("show");
 
-    // gui du lieu len server
     $("#saveAdd")
       .off("click")
       .click(function () {
-        // lay du lieu tu input
         let maSach = $("#addMaSach").val();
         let tenSach = $("#addTenSach").val();
         let tenTacGia = $("#addTacGia").val();
@@ -164,7 +160,6 @@ $(document).ready(function () {
     let modifyModal = $("#modifyModal");
     modifyModal.modal("show");
 
-    // lay du lieu tu hang de chuyen vao modal
     let rowData = $(this)
       .closest("tr")
       .find("td")
@@ -182,7 +177,6 @@ $(document).ready(function () {
     $("#saveModify")
       .off("click")
       .click(function () {
-        // lay du lieu tu input
         let maSach = $("#modifyMaSach").val();
         let tenSach = $("#modifyTenSach").val();
         let tenTacGia = $("#modifyTacGia").val();
@@ -202,7 +196,6 @@ $(document).ready(function () {
           toast("Năm xuất bản phải là số");
           return;
         } else {
-          // gui du lieu len server
           $.ajax({
             url:
               "http://localhost:1337/api/thong-tin-saches/" +
