@@ -1,6 +1,7 @@
 $(document).ready(function () {
   console.log("Page loaded");
 
+  // thong bao
   function toast(message) {
     const toast = $(".toast");
     $(".toast-body").text(message);
@@ -13,20 +14,37 @@ $(document).ready(function () {
     }, 100);
   }
 
-  function loadTable() {
-    // lay du lieu tu server
+  // lay du lieu cho select menu
+  function selectCategory() {
     $.ajax({
-      url: "http://localhost:1337/api/thong-tin-saches/?populate=*",
+      url: "http://localhost:1337/api/the-loais/?populate=*",
       method: "GET",
-      success: function (data) {
-        console.log("Data Loaded Successfully");
-        toTable(data["data"]); // sau khi tai du lieu thanh cong thi chuyen sang bang
+      success: function (response) {
+        let selectMenu = $(".categorySelect");
+        selectMenu.empty();
+        selectMenu.append("<option>Chọn thể loại</option>");
+        response.data.forEach(function (category) {
+          selectMenu.append(
+            '<option class="optionTheLoai" value="' +
+              category.id +
+              '">' +
+              category.attributes.TenTheLoai +
+              "</option>"
+          );
+        });
+
+        selectMenu.change(function () {
+          let selectedOption = $(this).find(":selected");
+          $(this).find("option").removeAttr("selected");
+          selectedOption.attr("selected", "selected");
+        });
       },
       error: function (err) {
-        console.log("Error loading data: ", err);
+        console.log(err);
       },
     });
   }
+  selectCategory();
 
   // chuyen sang bang
   function toTable(data) {
@@ -57,7 +75,21 @@ $(document).ready(function () {
     });
   }
 
-  // lay du lieu tu server
+  // hien thi du lieu
+  function loadTable() {
+    // lay du lieu tu server
+    $.ajax({
+      url: "http://localhost:1337/api/thong-tin-saches/?populate=*",
+      method: "GET",
+      success: function (data) {
+        console.log("Data Loaded Successfully");
+        toTable(data["data"]); // sau khi tai du lieu thanh cong thi chuyen sang bang
+      },
+      error: function (err) {
+        console.log("Error loading data: ", err);
+      },
+    });
+  }
   loadTable();
 
   // xoa du lieu
@@ -85,7 +117,7 @@ $(document).ready(function () {
   $("#addBtn").click(function () {
     let addModal = $("#addModal");
     addModal.modal("show");
-  
+
     // gui du lieu len server
     $("#saveAdd")
       .off("click")
@@ -94,9 +126,10 @@ $(document).ready(function () {
         let maSach = $("#addMaSach").val();
         let tenSach = $("#addTenSach").val();
         let tenTacGia = $("#addTacGia").val();
-        let theLoai = $(".categorySelect").find(":selected")[1].attributes.value.value;
+        let theLoai =
+          $(".categorySelect").find(":selected")[1].attributes.value.value;
         let namXuatBan = $("#addNXB").val();
-  
+
         if (
           maSach === "" ||
           tenSach === "" ||
@@ -120,7 +153,7 @@ $(document).ready(function () {
                 tenSach: tenSach,
                 tenTacGia: tenTacGia,
                 the_loai: {
-                  id: theLoai
+                  id: theLoai,
                 },
                 namXuatBan: namXuatBan,
               },
@@ -132,7 +165,7 @@ $(document).ready(function () {
               $("#addTenSach").val("");
               $("#addTacGia").val("");
               $("#addNXB").val("");
-  
+
               addModal.modal("hide");
               toast("Thêm sách mới thành công");
             },
@@ -145,14 +178,10 @@ $(document).ready(function () {
         }
       });
   });
-  
-  
+
   // cap nhat du lieu
   $("#bookTable").on("click", ".modify", function () {
-    console.log("this1", $(this));
     let id = $(this).data("id");
-    console.log("id :", id);
-    console.log("modify: ", id);
     let modifyModal = $("#modifyModal");
     modifyModal.modal("show");
 
@@ -179,7 +208,8 @@ $(document).ready(function () {
         let maSach = $("#modifyMaSach").val();
         let tenSach = $("#modifyTenSach").val();
         let tenTacGia = $("#modifyTacGia").val();
-        let theLoai = $(".categorySelect").find(":selected")[1].attributes.value.value;
+        let theLoai = $(".categorySelect").find(":selected").val();
+        console.log("the loai", theLoai);
         let namXuatBan = $("#modifyNXB").val();
 
         if (
@@ -197,7 +227,10 @@ $(document).ready(function () {
         } else {
           // gui du lieu len server
           $.ajax({
-            url: "http://localhost:1337/api/thong-tin-saches/" + id + "?populate=*",
+            url:
+              "http://localhost:1337/api/thong-tin-saches/" +
+              id +
+              "?populate=*",
             method: "PUT",
             contentType: "application/json",
             data: JSON.stringify({
@@ -206,17 +239,16 @@ $(document).ready(function () {
                 tenSach: tenSach,
                 tenTacGia: tenTacGia,
                 the_loai: {
-                  id: theLoai
+                  id: theLoai,
                 },
                 namXuatBan: namXuatBan,
               },
             }),
             success: function (data) {
-              console.log(data);
               console.log("Data Modified Successfully");
               loadTable();
               toast("Chỉnh sửa dữ liệu thành công");
-              
+
               modifyModal.modal("hide");
             },
             error: function (err) {
@@ -247,32 +279,4 @@ $(document).ready(function () {
       },
     });
   });
-  
-  // lay du lieu cho select menu
-  function selectCategory() {
-    $.ajax({
-        url: "http://localhost:1337/api/the-loais/?populate=*",
-        method: "GET",
-        success: function (response) {
-            let selectMenu = $(".categorySelect");
-            selectMenu.empty();
-            selectMenu.append('<option>Chọn thể loại</option>');
-            response.data.forEach(function (category) {
-                selectMenu.append('<option class="optionTheLoai" value="' + category.id + '">' + category.attributes.TenTheLoai + '</option>');
-            });
-
-            selectMenu.change(function () {
-                let selectedOption = $(this).find(":selected");
-                $(this).find("option").removeAttr("selected");
-                selectedOption.attr("selected", "selected");
-            });
-        },
-        error: function (err) {
-            console.log(err);
-        }
-    });
-  }
-
-
-  selectCategory();
 });
