@@ -23,7 +23,7 @@ $(document).ready(function () {
       success: function (response) {
         let selectMenu = $(".categorySelect");
         selectMenu.empty();
-        selectMenu.append("<option class='defaultOption'>Chọn thể loại</option>");
+        selectMenu.append("<option class='optionTheLoai'>Chọn thể loại</option>");
         response.data.forEach(function (category) {
           // Voi mang data tra ve, moi phan tu duoc lay ra va them vao select menu
           selectMenu.append(
@@ -154,6 +154,7 @@ $(document).ready(function () {
       $("#addMaSach").val("");
       $("#addTenSach").val("");
       $("#addTacGia").val("");
+      $(".categorySelect").prop("selectedIndex", 0);
       $("#addNXB").val("");
   });
 
@@ -174,6 +175,8 @@ $(document).ready(function () {
     $("#modifyMaSach").val(rowData[0]);
     $("#modifyTenSach").val(rowData[1]);
     $("#modifyTacGia").val(rowData[2]);
+    let index = $(".optionTheLoai").index($(".optionTheLoai:contains(" + rowData[3] + ")"));
+    $(".categorySelect").prop("selectedIndex", index);
     $("#modifyNXB").val(rowData[4]);
 
     $("#saveModify")
