@@ -5,7 +5,8 @@ $(document).ready(function () {
   function toast(message) {
     const toast = $(".toast");
     $(".toast-body").text(message);
-    setTimeout(function () { // hien thi thong bao sau 100ms va an sau 2000ms
+    setTimeout(function () {
+      // hien thi thong bao sau 100ms va an sau 2000ms
       toast.toast("show");
 
       setTimeout(function () {
@@ -23,7 +24,8 @@ $(document).ready(function () {
         let selectMenu = $(".categorySelect");
         selectMenu.empty();
         selectMenu.append("<option>Chọn thể loại</option>");
-        response.data.forEach(function (category) { // Voi mang data tra ve, moi phan tu duoc lay ra va them vao select menu
+        response.data.forEach(function (category) {
+          // Voi mang data tra ve, moi phan tu duoc lay ra va them vao select menu
           selectMenu.append(
             '<option class="optionTheLoai" value="' +
               category.id +
@@ -33,7 +35,8 @@ $(document).ready(function () {
           );
         });
 
-        selectMenu.change(function () { // Dat attribute select cho option duoc chon
+        selectMenu.change(function () {
+          // Dat attribute select cho option duoc chon
           let selectedOption = $(this).find(":selected");
           $(this).find("option").removeAttr("selected");
           selectedOption.attr("selected", "selected");
@@ -171,7 +174,6 @@ $(document).ready(function () {
     $("#modifyMaSach").val(rowData[0]);
     $("#modifyTenSach").val(rowData[1]);
     $("#modifyTacGia").val(rowData[2]);
-    $(".categorySelect").val(rowData[3]);
     $("#modifyNXB").val(rowData[4]);
 
     $("#saveModify")
