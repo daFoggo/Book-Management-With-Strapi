@@ -23,7 +23,7 @@ $(document).ready(function () {
       success: function (response) {
         let selectMenu = $(".categorySelect");
         selectMenu.empty();
-        selectMenu.append("<option>Chọn thể loại</option>");
+        selectMenu.append("<option class='defaultOption'>Chọn thể loại</option>");
         response.data.forEach(function (category) {
           // Voi mang data tra ve, moi phan tu duoc lay ra va them vao select menu
           selectMenu.append(
@@ -139,10 +139,6 @@ $(document).ready(function () {
             success: function () {
               console.log("Data Added Successfully");
               loadTable();
-              $("#addMaSach").val("");
-              $("#addTenSach").val("");
-              $("#addTacGia").val("");
-              $("#addNXB").val("");
 
               addModal.modal("hide");
               toast("Thêm sách mới thành công");
@@ -155,6 +151,10 @@ $(document).ready(function () {
           });
         }
       });
+      $("#addMaSach").val("");
+      $("#addTenSach").val("");
+      $("#addTacGia").val("");
+      $("#addNXB").val("");
   });
 
   // cap nhat du lieu

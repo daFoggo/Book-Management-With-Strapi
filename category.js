@@ -42,7 +42,7 @@ $(document).ready(function () {
   // hien thi du lieu
   function loadTable() {
     $.ajax({
-      url: "http://localhost:1337/api/the-loais/?populate=*",
+      url: "http://localhost:1337/api/the-loais/",
       method: "GET",
       success: function (data) {
         console.log("Data Loaded Successfully");
@@ -64,7 +64,7 @@ $(document).ready(function () {
       .click(function () {
         let theLoai = $("#addTheLoai").val();
         let moTa = $("#addMoTa").val();
-        if (theLoai === "") {
+        if (theLoai === "" || moTa === "") {
           toast("Vui lòng nhập đầy đủ thông tin");
           return;
         } else {
@@ -167,6 +167,23 @@ $(document).ready(function () {
       error: function (err) {
         console.log("Error deleting data: ", err);
         toast("Xoá thể loại thất bại");
+      },
+    });
+  });
+
+  //tim kiem theo the loai
+  $("#searchBtn").click(function () {
+    let searchValue = $("#searchBar").val();
+    $.ajax({
+      url: "http://localhost:1337/api/the-loais?filters[TenTheLoai]=" + searchValue,
+      method: "GET",
+      success: function (data) {
+        console.log("Data Loaded Successfully");
+        toTable(data["data"]);
+      },
+      error: function (err) {
+        console.log("Error loading data: ", err);
+        toast("Tìm kiếm thất bại");
       },
     });
   });

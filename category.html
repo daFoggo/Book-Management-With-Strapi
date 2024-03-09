@@ -56,6 +56,15 @@
             Thêm thể loại
           </button>
         </div>
+        <div class="searchDiv">
+          <input
+            type="text"
+            class="form-control-sm"
+            id="searchBar"
+            placeholder="Tìm kiếm theo thể loại"
+          />
+          <button id="searchBtn" class="btn btn-dark m-1">Tìm kiếm</button>
+        </div>
       </div>
     </div>
 
@@ -72,7 +81,7 @@
       <tbody id="categoryTable"></tbody>
     </table>
 
-    <!-- Thêm thể loại -->
+    <!-- Moal Thêm thể loại -->
     <div
       class="modal fade"
       id="addModal"
@@ -107,14 +116,7 @@
             </div>
             <div class="addContent">
               <p>Mô tả :</p>
-              <input
-                type="text"
-                id="addMoTa"
-                class="form-control-sm"
-                placeholder="Mô tả"
-                aria-label="Mô tả"
-                aria-describedby="basic-addon1"
-              />
+              <textarea class="form-control" id="addMoTa" rows="3"></textarea>
             </div>
           </div>
           <div class="modal-footer">
@@ -133,7 +135,7 @@
       </div>
     </div>
 
-    <!-- Chỉnh sửa thể loại -->
+    <!-- Modal Chỉnh sửa thể loại -->
     <div
       class="modal fade"
       id="modifyModal"
@@ -168,14 +170,7 @@
             </div>
             <div class="addContent">
               <p>Mô tả :</p>
-              <input
-                type="text"
-                id="modifyMoTa"
-                class="form-control-sm"
-                placeholder="Mô tả"
-                aria-label="Mô tả"
-                aria-describedby="basic-addon1"
-              />
+              <textarea class="form-control" id="modifyMoTa" rows="3"></textarea>
             </div>
           </div>
           <div class="modal-footer">
